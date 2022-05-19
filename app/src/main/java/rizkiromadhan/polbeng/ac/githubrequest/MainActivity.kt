@@ -5,25 +5,26 @@ import android.os.Bundle
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import kotlinx.android.synthetic.main.activity_main.*
-import org.json.JSONObject as JSONOBject1
+import org.json.JSONObject as JSONOBject
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         button.setOnClickListener {
             Thread (Runnable {
                 val mgithubinfo = fetchGitHubInfo(txtsearchuser.text.toString())
-                val jsonreader = JSONOBject1(mgithubinfo)
-                runOnUiThread {
+                val jsonreader = JSONOBject(mgithubinfo)
+                runOnUiThread(Runnable {
                     val id = jsonreader.getString("id")
                     val name = jsonreader.getString("name")
                     val url = jsonreader.getString("url")
                     val blog = jsonreader.getString("blog")
                     val bio = jsonreader.getString("bio")
-                    tvInfo.text =
-                        "${id}\n${name}\n${url}\n${blog}\n${bio}"
-                }
-            })
+                    tvInfo.text = "${id}\n${name}\n${url}\n${blog}\n${bio}"
+                })
+            }).start()
         }
     }
     private fun fetchGitHubInfo(login_id: String): String {
